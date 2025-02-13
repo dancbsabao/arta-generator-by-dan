@@ -4,34 +4,51 @@ const tinInput = document.getElementById('tin-input');
 const photoFolderBtn = document.getElementById('photo-folder-btn');
 
 // Fetch constants from the backend
-const API_BASE_URL = "https://arta-generator-by-dan.onrender.com"; // Update with your Render backend URL
+const API_BASE_URL = "https://arta-generator-by-dan.onrender.com";
 let API_KEY, SHEET_ID, RANGE;
 
+// First fetch to get config
 fetch(`${API_BASE_URL}/config`)
-  .then((response) => response.json())
+  .then((response) => {
+    if (!response.ok) {
+      throw new Error(`Config fetch failed with status: ${response.status}`);
+    }
+    return response.json();
+  })
   .then((config) => {
     API_KEY = config.apiKey;
     SHEET_ID = config.spreadsheetId;
     RANGE = config.range;
-
     console.log("Config loaded:", { API_KEY, SHEET_ID, RANGE });
-
-    fetchData(); // Fetch data once config is loaded
+    return fetchData(); // Return the promise from fetchData
   })
-  .catch((error) => console.error("Error fetching config:", error));
+  .catch((error) => {
+    console.error("Error in config fetch flow:", error);
+    throw error; // Re-throw to propagate the error
+  });
 
 // Fetch Google Sheets data from the backend
 async function fetchData() {
   try {
-    const response = await fetch(`${API_BASE_URL}/api/data`);
-    if (!response.ok) throw new Error("Failed to fetch data from backend");
-
+    const response = await fetch(`${API_BASE_URL}/api/data`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json'
+        // Add any required headers here
+      }
+    });
+    
+    if (!response.ok) {
+      const errorText = await response.text();
+      throw new Error(`Failed to fetch data from backend. Status: ${response.status}, Response: ${errorText}`);
+    }
+    
     const data = await response.json();
     console.log("Fetched data:", data);
-
-    processFetchedData(data);
+    return processFetchedData(data);
   } catch (error) {
-    console.error("Error fetching data:", error);
+    console.error("Error in fetchData:", error);
+    throw error;
   }
 }
 
