@@ -3,54 +3,59 @@ const employeeSelect = document.getElementById('employee-select');
 const tinInput = document.getElementById('tin-input');
 const photoFolderBtn = document.getElementById('photo-folder-btn');
 
-// Fetch constants from the backend
-const API_BASE_URL = "https://arta-generator-by-dan.onrender.com";
-let API_KEY, SHEET_ID, RANGE;
+// At the top of your script.js, define the config
+const GOOGLE_SHEETS_CONFIG = {
+    API_BASE_URL: "https://arta-generator-by-dan.onrender.com",
+    apiKey: null,
+    spreadsheetId: null,
+    range: null
+};
 
-// First fetch to get config
-fetch(`${API_BASE_URL}/config`)
-  .then((response) => {
-    if (!response.ok) {
-      throw new Error(`Config fetch failed with status: ${response.status}`);
+// Fetch constants from the backend
+fetch(`${GOOGLE_SHEETS_CONFIG.API_BASE_URL}/config`)
+    .then((response) => response.json())
+    .then((config) => {
+        GOOGLE_SHEETS_CONFIG.apiKey = config.apiKey;
+        GOOGLE_SHEETS_CONFIG.spreadsheetId = config.spreadsheetId;
+        GOOGLE_SHEETS_CONFIG.range = config.range;
+        console.log("Config loaded:", GOOGLE_SHEETS_CONFIG);
+        return fetchData();
+    })
+    .catch((error) => console.error("Error fetching config:", error));
+
+// Define the processFetchedData function
+function processFetchedData(data) {
+    // Process your data here
+    console.log("Processing data:", data);
+    // Add your data processing logic
+    const rows = data.values || [];
+    if (rows.length > 0) {
+        // Example: Process headers
+        const headers = rows[0];
+        // Process rest of the rows
+        const dataRows = rows.slice(1);
+        
+        // Do something with the data
+        dataRows.forEach(row => {
+            // Process each row
+            console.log("Processing row:", row);
+        });
     }
-    return response.json();
-  })
-  .then((config) => {
-    API_KEY = config.apiKey;
-    SHEET_ID = config.spreadsheetId;
-    RANGE = config.range;
-    console.log("Config loaded:", { API_KEY, SHEET_ID, RANGE });
-    return fetchData(); // Return the promise from fetchData
-  })
-  .catch((error) => {
-    console.error("Error in config fetch flow:", error);
-    throw error; // Re-throw to propagate the error
-  });
+}
 
 // Fetch Google Sheets data from the backend
 async function fetchData() {
-  try {
-    const response = await fetch(`${API_BASE_URL}/api/data`, {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json'
-        // Add any required headers here
-      }
-    });
-    
-    if (!response.ok) {
-      const errorText = await response.text();
-      throw new Error(`Failed to fetch data from backend. Status: ${response.status}, Response: ${errorText}`);
+    try {
+        const response = await fetch(`${GOOGLE_SHEETS_CONFIG.API_BASE_URL}/api/data`);
+        if (!response.ok) throw new Error("Failed to fetch data from backend");
+        const data = await response.json();
+        console.log("Fetched data:", data);
+        processFetchedData(data);
+    } catch (error) {
+        console.error("Error fetching data:", error);
     }
-    
-    const data = await response.json();
-    console.log("Fetched data:", data);
-    return processFetchedData(data);
-  } catch (error) {
-    console.error("Error in fetchData:", error);
-    throw error;
-  }
 }
+
 
 
 
