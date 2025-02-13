@@ -3,54 +3,38 @@ const employeeSelect = document.getElementById('employee-select');
 const tinInput = document.getElementById('tin-input');
 const photoFolderBtn = document.getElementById('photo-folder-btn');
 
-// Google Sheets Configuration
-const API_BASE_URL = "https://arta-generator-by-dan.onrender.com"; // Replace with your actual Render backend URL
+// Fetch constants from the backend
+const API_BASE_URL = "https://arta-generator-by-dan.onrender.com"; // Update with your Render backend URL
+let API_KEY, SHEET_ID, RANGE;
 
-const GOOGLE_SHEETS_CONFIG = {
-    apiKey: "", 
-    spreadsheetId: "",
-    range: ""
-};
-
-// Fetch configuration from backend
 fetch(`${API_BASE_URL}/config`)
-  .then((response) => {
-    if (!response.ok) {
-      throw new Error(`HTTP error! Status: ${response.status}`);
-    }
-    return response.json();
-  })
+  .then((response) => response.json())
   .then((config) => {
-    // Assign backend values to constants
-    GOOGLE_SHEETS_CONFIG.apiKey = config.apiKey;
-    GOOGLE_SHEETS_CONFIG.spreadsheetId = config.spreadsheetId;
-    GOOGLE_SHEETS_CONFIG.range = config.range;
+    API_KEY = config.apiKey;
+    SHEET_ID = config.spreadsheetId;
+    RANGE = config.range;
 
-    console.log("Config loaded:", GOOGLE_SHEETS_CONFIG);
+    console.log("Config loaded:", { API_KEY, SHEET_ID, RANGE });
 
-    // Now fetch the data using the updated constants
-    fetchData();
+    fetchData(); // Fetch data once config is loaded
   })
-  .catch((error) => {
-    console.error("Error fetching config:", error);
-  });
+  .catch((error) => console.error("Error fetching config:", error));
 
 // Fetch Google Sheets data from the backend
 async function fetchData() {
-    try {
-        const response = await fetch(`${API_BASE_URL}/api/data`);
-        if (!response.ok) throw new Error('Failed to fetch data from backend');
-        
-        const data = await response.json();
-        console.log('Fetched data:', data);
-        
-        // Process the fetched data
-        processFetchedData(data);
-        
-    } catch (error) {
-        console.error('Error fetching data:', error);
-    }
+  try {
+    const response = await fetch(`${API_BASE_URL}/api/data`);
+    if (!response.ok) throw new Error("Failed to fetch data from backend");
+
+    const data = await response.json();
+    console.log("Fetched data:", data);
+
+    processFetchedData(data);
+  } catch (error) {
+    console.error("Error fetching data:", error);
+  }
 }
+
 
 
 
