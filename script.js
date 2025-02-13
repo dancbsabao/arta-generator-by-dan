@@ -11,46 +11,34 @@ const GOOGLE_SHEETS_CONFIG = {
     range: null
 };
 
-// Fetch constants from the backend
-fetch(`${GOOGLE_SHEETS_CONFIG.API_BASE_URL}/config`)
+// Google Sheets Configuration - structure stays the same but values come from backend
+const GOOGLE_SHEETS_CONFIG = {
+    apiKey: null,
+    spreadsheetId: null,
+    range: null
+};
+
+// Fetch constants from the backend and update the config object
+fetch(`${API_BASE_URL}/config`)
     .then((response) => response.json())
     .then((config) => {
+        // Update the config object with values from backend
         GOOGLE_SHEETS_CONFIG.apiKey = config.apiKey;
         GOOGLE_SHEETS_CONFIG.spreadsheetId = config.spreadsheetId;
         GOOGLE_SHEETS_CONFIG.range = config.range;
         console.log("Config loaded:", GOOGLE_SHEETS_CONFIG);
-        return fetchData();
+        fetchData(); // Fetch data once config is loaded
     })
     .catch((error) => console.error("Error fetching config:", error));
 
-// Define the processFetchedData function
-function processFetchedData(data) {
-    // Process your data here
-    console.log("Processing data:", data);
-    // Add your data processing logic
-    const rows = data.values || [];
-    if (rows.length > 0) {
-        // Example: Process headers
-        const headers = rows[0];
-        // Process rest of the rows
-        const dataRows = rows.slice(1);
-        
-        // Do something with the data
-        dataRows.forEach(row => {
-            // Process each row
-            console.log("Processing row:", row);
-        });
-    }
-}
-
-// Fetch Google Sheets data from the backend
+// Keep your existing fetchData function
 async function fetchData() {
     try {
-        const response = await fetch(`${GOOGLE_SHEETS_CONFIG.API_BASE_URL}/api/data`);
+        const response = await fetch(`${API_BASE_URL}/api/data`);
         if (!response.ok) throw new Error("Failed to fetch data from backend");
         const data = await response.json();
         console.log("Fetched data:", data);
-        processFetchedData(data);
+        processData(data); // Assuming you have a processData function
     } catch (error) {
         console.error("Error fetching data:", error);
     }
@@ -420,10 +408,24 @@ employeeSelect.addEventListener('change', (e) => {
 // Modified initialization function
 async function initializeForm() {
     try {
-        await gapi.client.init({
+        // Wait for config to be loaded
+        if (!GOOGLE_SHEETS_CONFIG.apiKey) {
+            console.log("Waiting for config to load...");
+            // You might want to add a loading indicator here
+            return;
+        }
+
+        gapi.client.init({
             apiKey: GOOGLE_SHEETS_CONFIG.apiKey,
-            discoveryDocs: ['https://sheets.googleapis.com/$discovery/rest?version=v4'],
+            discoveryDocs: ["https://sheets.googleapis.com/$discovery/rest?version=v4"],
+        }).then(function() {
+            // Your existing initialization code
+        }).catch(function(error) {
+            console.error("Error initializing Google Sheets API:", error);
         });
+        } catch (error) {
+        console.error("Error initializing form:", error);
+        }
 
         // Fetch employee data
         const employees = await fetchEmployeeData();
@@ -466,6 +468,8 @@ async function initializeForm() {
                 updateFormFields(selectedEmployee);
             }
         });
+
+        
 
         function updateFormFields(employee) {
             firstNameInput.value = employee.firstName;
