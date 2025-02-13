@@ -4,7 +4,7 @@ const tinInput = document.getElementById('tin-input');
 const photoFolderBtn = document.getElementById('photo-folder-btn');
 
 // Google Sheets Configuration
-const API_BASE_URL = "https://your-render-app.onrender.com"; // Replace with your actual Render backend URL
+const API_BASE_URL = "https://arta-generator-by-dan.onrender.com"; // Replace with your actual Render backend URL
 
 const GOOGLE_SHEETS_CONFIG = {
     apiKey: "", 
