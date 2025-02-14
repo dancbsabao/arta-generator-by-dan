@@ -299,7 +299,7 @@ body {
 .id-card {
     width: 9cm;
     height: 12.5cm;
-    background: url('../assets/images/ARTA TEMPLATE.jpg') no-repeat center center;
+    background: url('https://raw.githubusercontent.com/dancbsabao/arta-generator-by-dan/main/assets/images/ARTA%20TEMPLATE.jpg') no-repeat center center;
     background-size: cover;
     
     position: relative;
