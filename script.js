@@ -240,7 +240,22 @@ assignmentInput.addEventListener('input', (e) => {
 function updateLastNameDisplay() {
     const middleInitial = formState.middleInitial ? formState.middleInitial : 'M.';
     const lastName = formState.lastName || 'LASTNAME';
-    lastNameText.textContent = `${middleInitial} ${lastName}`;
+    
+    // Combine middle initial and last name
+    const combinedText = `${middleInitial} ${lastName}`;
+    lastNameText.textContent = combinedText;
+    
+    // Check if the combined text length exceeds 18 characters
+    if (combinedText.length > 18) {
+        // Apply smaller font size when text is too long
+        lastNameText.style.fontSize = '14px';
+    } else {
+        // Reset to default font size for shorter text
+        lastNameText.style.fontSize = '18px';
+    }
+    
+    // Add debug output
+    console.log(`Text: "${combinedText}", Length: ${combinedText.length}, Font size: ${lastNameText.style.fontSize}`);
 }
 
 // Form validation
