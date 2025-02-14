@@ -7,7 +7,7 @@ const app = express();
 
 // Keep-alive function to prevent Render from sleeping
 function createArtaGeneratorKeepAlive() {
-  const url = 'https://arta-generator-by-dan.onrender.com';
+  const url = 'https://arta-generator-by-dan.onrender.com/health';
   const interval = 14 * 60 * 1000; // 14 minutes
   let timerId = null;
   
@@ -28,7 +28,7 @@ function createArtaGeneratorKeepAlive() {
         console.warn(`Failed to ping Arta Generator: Status ${response.status} at ${timestamp}`);
       }
     } catch (error) {
-      console.error(`Error pinging Arta Generator:`, error);
+      console.error(`Error pinging Arta Generator:`, error.message);
     }
   };
   
@@ -105,6 +105,11 @@ app.get('/api/data', async (req, res) => {
   }
 });
 
+// Add a lightweight health check endpoint specifically for keep-alive pings
+app.get('/health', (req, res) => {
+  res.status(200).json({ status: 'ok', timestamp: new Date().toISOString() });
+});
+
 // Handle 404 errors for undefined routes
 app.use((req, res, next) => {
   res.status(404).json({ error: 'Endpoint not found' });
@@ -118,4 +123,13 @@ app.listen(PORT, () => {
   // Start the keep-alive service after the server is running
   const keepAliveService = createArtaGeneratorKeepAlive();
   keepAliveService.start();
+});
+
+// Handle graceful shutdown
+process.on('SIGTERM', () => {
+  const keepAliveService = createArtaGeneratorKeepAlive();
+  keepAliveService.stop();
+  console.log('SIGTERM received. Shutting down gracefully');
+  // You can add more cleanup code here if needed
+  process.exit(0);
 });
