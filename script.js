@@ -3,67 +3,48 @@ const employeeSelect = document.getElementById('employee-select');
 const tinInput = document.getElementById('tin-input');
 const photoFolderBtn = document.getElementById('photo-folder-btn');
 
-// At the top of your script.js, define the config
-const GOOGLE_SHEETS_CONFIG = {
-    API_BASE_URL: "https://arta-generator-by-dan.onrender.com",
+// Google Sheets Configuration - Will be loaded dynamically
+let GOOGLE_SHEETS_CONFIG = {
     apiKey: null,
     spreadsheetId: null,
     range: null
 };
 
-// Google Sheets Configuration - structure stays the same but values come from backend
-const GOOGLE_SHEETS_CONFIG = {
-    apiKey: null,
-    spreadsheetId: null,
-    range: null
-};
-
-// Fetch constants from the backend and update the config object
-fetch(`${API_BASE_URL}/config`)
-    .then((response) => response.json())
-    .then((config) => {
-        // Update the config object with values from backend
-        GOOGLE_SHEETS_CONFIG.apiKey = config.apiKey;
-        GOOGLE_SHEETS_CONFIG.spreadsheetId = config.spreadsheetId;
-        GOOGLE_SHEETS_CONFIG.range = config.range;
-        console.log("Config loaded:", GOOGLE_SHEETS_CONFIG);
-        fetchData(); // Fetch data once config is loaded
-    })
-    .catch((error) => console.error("Error fetching config:", error));
-
-// Keep your existing fetchData function
-async function fetchData() {
+// Fetch secure configuration from backend
+async function loadConfig() {
     try {
-        const response = await fetch(`${API_BASE_URL}/api/data`);
-        if (!response.ok) throw new Error("Failed to fetch data from backend");
-        const data = await response.json();
-        console.log("Fetched data:", data);
-        processData(data); // Assuming you have a processData function
+        const response = await fetch('https://arta-generator-by-dan.onrender.com');
+        if (!response.ok) {
+            throw new Error('Failed to load configuration');
+        }
+        GOOGLE_SHEETS_CONFIG = await response.json();
+        console.log('Configuration loaded successfully');
+        
+        // Initialize GAPI after we have the configuration
+        initializeGAPI();
     } catch (error) {
-        console.error("Error fetching data:", error);
+        console.error('Error loading configuration:', error);
+        alert('Failed to load application configuration. Please refresh the page or contact support.');
     }
 }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+// Initialize Google API client
+function initializeGAPI() {
+    gapi.load('client', async () => {
+        try {
+            await gapi.client.init({
+                apiKey: GOOGLE_SHEETS_CONFIG.apiKey,
+                discoveryDocs: ['https://sheets.googleapis.com/$discovery/rest?version=v4'],
+            });
+            
+            // Now that GAPI is initialized, we can fetch employee data
+            initializeForm();
+        } catch (error) {
+            console.error('Error initializing GAPI client:', error);
+            alert('Error connecting to Google services. Please refresh and try again.');
+        }
+    });
+}
 
 document.getElementById('photo-folder-btn').addEventListener('click', () => {
     window.open('https://drive.google.com/drive/folders/1DJzqBJKDaARcOU9hvPtKMXwpEmBWb-La?usp=sharing', '_blank');
@@ -273,22 +254,17 @@ const validateForm = () => {
     return validations.every(valid => valid);
 };
 
-
-
-// Ensure jsPDF is available globally
-const { jsPDF } = window.jspdf;
-
-// Check if jsPDF is correctly loaded
-if (!jsPDF) {
-    console.error("jsPDF is not loaded correctly!");
-} else {
-    console.log("jsPDF loaded successfully!");
-}
-
 // Download ID Card as A5 PDF
 downloadBtn.addEventListener('click', async () => {
     try {
-        if (!jsPDF) throw new Error("jsPDF is not defined");
+        // Check if jsPDF is available
+        if (typeof window.jspdf === 'undefined' || typeof window.jspdf.jsPDF === 'undefined') {
+            console.error('jsPDF is not loaded properly. Make sure the script is included before this code runs.');
+            alert('PDF generation library is not available. Please refresh the page and try again.');
+            return;
+        }
+        
+        const { jsPDF } = window.jspdf;
 
         // Validate Form Fields
         const selectedEmployee = JSON.parse(employeeSelect.value || '{}');
@@ -351,9 +327,14 @@ downloadBtn.addEventListener('click', async () => {
 });
 
 
-// Function to fetch employee data from Google Sheets
+// Modified function to fetch employee data from Google Sheets via backend
 async function fetchEmployeeData() {
     try {
+        // Check if GAPI is initialized and config is loaded
+        if (!GOOGLE_SHEETS_CONFIG.apiKey) {
+            throw new Error('Google Sheets configuration not loaded');
+        }
+
         const response = await gapi.client.sheets.spreadsheets.values.get({
             spreadsheetId: GOOGLE_SHEETS_CONFIG.spreadsheetId,
             range: GOOGLE_SHEETS_CONFIG.range,
@@ -405,28 +386,8 @@ employeeSelect.addEventListener('change', (e) => {
 });
 
 // Initialize the form
-// Modified initialization function
 async function initializeForm() {
     try {
-        // Wait for config to be loaded
-        if (!GOOGLE_SHEETS_CONFIG.apiKey) {
-            console.log("Waiting for config to load...");
-            // You might want to add a loading indicator here
-            return;
-        }
-
-        gapi.client.init({
-            apiKey: GOOGLE_SHEETS_CONFIG.apiKey,
-            discoveryDocs: ["https://sheets.googleapis.com/$discovery/rest?version=v4"],
-        }).then(function() {
-            // Your existing initialization code
-        }).catch(function(error) {
-            console.error("Error initializing Google Sheets API:", error);
-        });
-        } catch (error) {
-        console.error("Error initializing form:", error);
-        }
-
         // Fetch employee data
         const employees = await fetchEmployeeData();
         const employeeSelect = $("#employee-select");
@@ -468,8 +429,6 @@ async function initializeForm() {
                 updateFormFields(selectedEmployee);
             }
         });
-
-        
 
         function updateFormFields(employee) {
             firstNameInput.value = employee.firstName;
@@ -516,11 +475,13 @@ document.addEventListener("DOMContentLoaded", function () {
 
     // Run function when the user types in the input field
     firstNameInput.addEventListener("input", formatFirstName);
+    
+    // Load secure configuration first
+    loadConfig();
 });
 
 
-// Photo folder button click handler
+// Photo folder button click handler (preserved from original)
 photoFolderBtn.addEventListener('click', () => {
-    // Replace with your Google Drive folder link
-    window.open('YOUR_GOOGLE_DRIVE_FOLDER_LINK', '_blank');
+    window.open('https://drive.google.com/drive/folders/1DJzqBJKDaARcOU9hvPtKMXwpEmBWb-La?usp=sharing', '_blank');
 });
