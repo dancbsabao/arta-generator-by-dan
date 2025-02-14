@@ -25,6 +25,12 @@ app.use(cors({
 
 app.use(express.json());
 
+// ✅ **New Keep-Alive Endpoint**
+app.get('/ping', (req, res) => {
+  console.log('Server pinged: ' + new Date().toISOString());
+  res.status(200).send('OK');
+});
+
 // ✅ **New API to Serve Configurations Securely**
 app.get('/config', (req, res) => {
     res.json({
