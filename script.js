@@ -11,13 +11,19 @@ let GOOGLE_SHEETS_CONFIG = {
 };
 
 // Fetch secure configuration from backend
+// Inside loadConfig()
 async function loadConfig() {
     try {
-        const response = await fetch('https://arta-generator-by-dan.onrender.com');
+        const response = await fetch('https://arta-generator-by-dan.onrender.com/config');
         if (!response.ok) {
             throw new Error('Failed to load configuration');
         }
-        GOOGLE_SHEETS_CONFIG = await response.json();
+        const config = await response.json();
+        GOOGLE_SHEETS_CONFIG = {
+            apiKey: config.apiKey,
+            spreadsheetId: config.spreadsheetId,
+            range: config.range
+        };
         console.log('Configuration loaded successfully');
         
         // Initialize GAPI after we have the configuration
