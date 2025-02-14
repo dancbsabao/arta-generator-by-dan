@@ -1,3 +1,13 @@
+@font-face {
+    font-family: 'ArialBlackCustom';
+    src: url('/assets/fonts/ARIBLK.TTF') format('truetype');
+}
+
+@font-face {
+    font-family: 'TahomaCustom';
+    src: url('/assets/fonts/tahoma.ttf') format('truetype');
+}
+
 .hidden-fields {
     display: none;
 }
@@ -373,7 +383,7 @@ body {
 .first-name {
     font-size: 26pt;
     font-weight: 900;
-    font-family: 'Arial Black', sans-serif;
+    font-family: 'ArialBlackCustom', sans-serif;
     color: #000;
     line-height: 0.9;
     display: inline-block;
@@ -386,7 +396,7 @@ body {
 .last-name {
     font-size: 14pt;
     font-weight: 900;
-    font-family: 'Arial Black', sans-serif;
+    font-family: 'ArialBlackCustom', sans-serif;
     color: #000;
     line-height: 0.5;
     display: block;
@@ -412,7 +422,7 @@ body {
 
 .position {
     font-size: 12pt;
-    font-family: Tahoma, sans-serif;
+    font-family: 'TahomaCustom', sans-serif;
     font-weight: bold;
     color: white;
     line-height: 1;
@@ -422,7 +432,7 @@ body {
 
 .assignment {
     font-size: 10pt;
-    font-family: Tahoma, sans-serif;
+    font-family: 'TahomaCustom', sans-serif;
     font-weight: bold;
     color: white;
     line-height: 1;
