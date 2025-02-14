@@ -1,11 +1,11 @@
 @font-face {
     font-family: 'ArialBlackCustom';
-    src: url('/assets/fonts/ARIBLK.TTF') format('truetype');
+    src: url('./assets/fonts/ARIBLK.TTF') format('truetype');
 }
 
 @font-face {
     font-family: 'TahomaCustom';
-    src: url('/assets/fonts/tahoma.ttf') format('truetype');
+    src: url('./assets/fonts/tahoma.ttf') format('truetype');
 }
 
 .hidden-fields {
