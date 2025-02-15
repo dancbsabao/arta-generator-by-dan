@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+    <script src="https://cdn.jsdelivr.net/npm/jsbarcode@3.11.5/dist/JsBarcode.all.min.js"></script>
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -29,6 +30,7 @@
                     <div class="position" id="position-text">POSITION</div>
                     <div class="assignment" id="assignment-text">ASSIGNMENT</div>
                 </div>
+                <div id="barcode-container" class="barcode-container"></div>
             </div>
         </div>
 
@@ -141,7 +143,6 @@
         </form>
         </div>
     </div>
-
     <!-- Include jQuery FIRST -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <!-- Include Select2 Library -->
