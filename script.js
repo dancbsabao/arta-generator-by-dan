@@ -275,22 +275,80 @@ const validateForm = () => {
     return validations.every(valid => valid);
 };
 
+
+// Function to generate and update barcode
+function generateBarcode(tin) {
+    const barcodeSVG = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+    barcodeSVG.id = 'tin-barcode';
+    
+    JsBarcode(barcodeSVG, tin, {
+        format: "CODE128",
+        width: 1,
+        height: 20,
+        displayValue: true,
+        fontSize: 12,
+        margin: 5,
+        background: "#FFFFFF",
+        lineColor: "#000000"
+    });
+    
+    return barcodeSVG;
+}
+
+// Function to convert barcode SVG to image
+function convertBarcodeToImage(barcodeSVG) {
+    return new Promise((resolve) => {
+        const xml = new XMLSerializer().serializeToString(barcodeSVG);
+        const svg64 = btoa(xml);
+        const img = new Image();
+        img.src = 'data:image/svg+xml;base64,' + svg64;
+        img.onload = () => {
+            // Create a canvas to rotate the barcode
+            const canvas = document.createElement('canvas');
+            const ctx = canvas.getContext('2d');
+            
+            canvas.width = img.height;
+            canvas.height = img.width;
+            
+            ctx.translate(canvas.width / 2, canvas.height / 2);
+            ctx.rotate(-Math.PI / 2);
+            ctx.drawImage(img, -img.width / 2, -img.height / 2);
+            
+            const rotatedImg = new Image();
+            rotatedImg.src = canvas.toDataURL("image/png");
+            rotatedImg.onload = () => resolve(rotatedImg);
+        };
+    });
+}
+
+// Add TIN input handler
+tinInput.addEventListener('input', async (e) => {
+    const tin = e.target.value.trim();
+    const barcodeContainer = document.getElementById('barcode-container');
+    
+    if (tin) {
+        const barcodeSVG = generateBarcode(tin);
+        const barcodeImg = await convertBarcodeToImage(barcodeSVG);
+        barcodeContainer.innerHTML = '';
+        barcodeContainer.appendChild(barcodeImg);
+    } else {
+        barcodeContainer.innerHTML = '';
+    }
+});
+
 // Download ID Card as A5 PDF
 downloadBtn.addEventListener('click', async () => {
     try {
-        // Check if jsPDF is available
         if (typeof window.jspdf === 'undefined' || typeof window.jspdf.jsPDF === 'undefined') {
-            console.error('jsPDF is not loaded properly. Make sure the script is included before this code runs.');
+            console.error('jsPDF is not loaded properly.');
             alert('PDF generation library is not available. Please refresh the page and try again.');
             return;
         }
-        
-        const { jsPDF } = window.jspdf;
 
-        // Validate Form Fields
+        const { jsPDF } = window.jspdf;
         const selectedEmployee = JSON.parse(employeeSelect.value || '{}');
         const tinValue = tinInput.value.trim();
-        
+
         if (!tinValue) {
             document.getElementById('tin-error').textContent = 'TIN NUMBER IS REQUIRED';
             document.getElementById('tin-error').style.color = 'red';
@@ -310,13 +368,18 @@ downloadBtn.addEventListener('click', async () => {
         }
 
         const idCard = document.getElementById('id-card');
+        if (!idCard) {
+            console.error("Error: ID card element not found.");
+            alert("ID card element not found. Please refresh and try again.");
+            return;
+        }
 
-        // Convert ID card to image
+        // Convert ID card to an image with barcode
         const canvas = await html2canvas(idCard, {
             scale: 2,
             useCORS: true,
             allowTaint: true,
-            backgroundColor: '#FFFFFF',  // Force white background
+            backgroundColor: '#FFFFFF',
             logging: false
         });
 
@@ -329,7 +392,6 @@ downloadBtn.addEventListener('click', async () => {
             format: 'a5'
         });
 
-        // Set Image Dimensions
         const imgWidth = 90;
         const imgHeight = 125;
         const margin = 10;
@@ -337,16 +399,13 @@ downloadBtn.addEventListener('click', async () => {
         // Add Two IDs Side by Side
         pdf.addImage(imgData, 'JPEG', margin, 10, imgWidth, imgHeight);
         pdf.addImage(imgData, 'JPEG', margin + imgWidth + 10, 10, imgWidth, imgHeight);
-
-        // Save PDF
         pdf.save(`${selectedEmployee.firstName}-${selectedEmployee.lastName}-ID.pdf`);
-        
+    
     } catch (error) {
         console.error('Error generating ID card:', error);
         alert('Error generating ID card. Please check console.');
     }
 });
-
 
 // Modified function to fetch employee data from Google Sheets via backend
 async function fetchEmployeeData() {
@@ -506,3 +565,4 @@ document.addEventListener("DOMContentLoaded", function () {
 photoFolderBtn.addEventListener('click', () => {
     window.open('https://drive.google.com/drive/folders/1DJzqBJKDaARcOU9hvPtKMXwpEmBWb-La?usp=sharing', '_blank');
 });
+
