@@ -1,3 +1,31 @@
+/* Barcode container with precise positioning */
+.barcode-container {
+    position: absolute;
+    right: 1.8cm; /* Position outside card */
+    top: 45%;
+    transform: translateY(-50%);
+    width: 1cm;
+    height: 10cm; /* Reasonable height for barcode */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: visible;
+}
+/* Barcode SVG precise styling */
+#tin-barcode {
+    position: absolute;
+    transform-origin: center;
+}
+
+
+/* Ensure card preview handles overflow */
+.card-preview {
+    overflow: visible;
+    padding: 5rem;
+    margin-right: 1.5cm; /* Accommodate barcode overflow */
+}
+
+
 @font-face {
     font-family: 'ArialBlackCustom';
     src: url('/arta-generator-by-dan/assets/fonts/ARIBLK.TTF') format('truetype');
@@ -290,7 +318,6 @@ body {
     height: 12.5cm;
     background: url('https://raw.githubusercontent.com/dancbsabao/arta-generator-by-dan/main/assets/images/ARTA%20TEMPLATE.jpg') no-repeat center center;
     background-size: cover;
-    
     position: relative;
     transition: transform 0.2s ease;
 }
