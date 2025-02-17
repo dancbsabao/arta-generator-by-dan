@@ -304,7 +304,7 @@ body {
 
 /* Container Layout */
 .container {
-    max-width: 50%;
+    max-width: 90%;
     margin: 0 auto;
     gap: 2rem;
     align-items: start;
@@ -320,13 +320,14 @@ body {
 .id-card {
     width: 9cm;
     height: 12.5cm;
+    max-width: 100%;
+    margin: 0 auto;
     display: flex;
     background: url('https://raw.githubusercontent.com/dancbsabao/arta-generator-by-dan/main/assets/images/ARTA%20TEMPLATE.jpg') no-repeat center center;
     background-size: cover;
     justify-content: center;
     align-items: center;
     position: relative;
-    transition: transform 0.2s ease;
 }
 
 .photo-container {
@@ -597,7 +598,7 @@ body {
 @media (max-width: 400px) {
     .modal-content {
         margin: 10% auto;
-        width: 40%;
+        width: 95%;
     }
     
     .cropper-container {
