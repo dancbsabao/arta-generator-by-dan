@@ -51,15 +51,6 @@
     margin-top: 30px; /* Add space above footer */
 }
 
-/* Responsive - Ensures it's readable on smaller screens */
-@media (max-width: 768px) {
-    .container {
-        padding: 1rem;
-    }
-    .form-container, .dropdown-container {
-        max-width: 90%;
-    }
-}
 
 /* Ensure the select field text is vertically centered */
 .dropdown-container .select2-selection--single {
@@ -210,12 +201,7 @@
     background-color: #0056b3;
 }
 
-/* Responsive Handling */
-@media (max-width: 400px) {
-    .custom-download-btn {
-        max-width: 100%;
-    }
-}
+
 
 /* Modal Styles */
 .modal {
@@ -304,15 +290,98 @@ body {
     padding: 2rem;
 }
 
+
 /* Container Layout */
+/* CSS Variables for easier customization */
+:root {
+    --container-max-width: 1200px;
+    --mobile-padding: 1rem;
+    --extra-padding-bottom: 2rem;
+    --margin-bottom-spacing: 2rem;
+    --small-margin-bottom: 3rem;
+    --form-width: 90%;
+    --max-width-modal: 95%;
+}
+
 .container {
-    max-width: 1200px;
+    max-width: var(--container-max-width);
     margin: 0 auto;
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-    gap: 2rem;
     align-items: start;
+    padding: var(--mobile-padding); /* Base padding */
 }
+
+/* Responsive - Adjust for mobile screens (max-width: 768px) */
+@media (max-width: 768px) {
+    body {
+        padding: var(--mobile-padding);
+        padding-bottom: var(--extra-padding-bottom); /* Extra padding at the bottom */
+    }
+
+    .container {
+        grid-template-columns: 1fr;
+        margin-bottom: var(--margin-bottom-spacing); /* Space between container and footer */
+    }
+
+    .button-group {
+        display: flex;
+        flex-direction: column;
+        gap: var(--margin-bottom-spacing); /* Adds space between buttons */
+    }
+
+    /* Form and button spacing */
+    .form-container {
+        margin-bottom: var(--small-margin-bottom);
+    }
+
+    .download-btn-container {
+        margin-bottom: var(--margin-bottom-spacing);
+    }
+
+    /* Ensure form container and other components have adequate spacing */
+    .form-container,
+    .dropdown-container {
+        max-width: var(--form-width); /* Ensures forms don't exceed 90% width */
+    }
+}
+
+/* Mobile adjustments for smaller screens (max-width: 400px) */
+@media (max-width: 400px) {
+    .custom-download-btn {
+        width: 100%;
+    }
+
+    .modal-content {
+        margin: 10% auto;
+        width: var(--max-width-modal);
+    }
+
+    .cropper-container {
+        max-height: 50vh;
+    }
+}
+
+/* Use clamp() for fluid typography */
+h1, h2, h3, .text {
+    font-size: clamp(1.2rem, 5vw, 2rem); /* Scales text size based on viewport */
+}
+
+/* Container Layout */
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 .card-preview {
     display: flex;
@@ -570,42 +639,4 @@ body {
     background-color: #e2e8f0;
 }
 
-/* Add padding to the bottom of the body for mobile devices */
-@media (max-width: 768px) {
-    body {
-        padding: 1rem;
-        padding-bottom: 2rem; /* Extra padding at the bottom */
-    }
 
-    .container {
-        grid-template-columns: 1fr;
-        margin-bottom: 2rem; /* Space between container and footer */
-    }
-
-    .button-group {
-        grid-template-columns: 1fr;
-        margin-bottom: 2rem; /* Space after buttons */
-    }
-    
-    /* Ensure form container has adequate spacing */
-    .form-container {
-        margin-bottom: 3rem;
-    }
-    
-    /* Make sure download button has proper spacing */
-    .download-btn-container {
-        margin-bottom: 2rem;
-    }
-}
-
-/* Adjust the modal for better mobile viewing */
-@media (max-width: 400px) {
-    .modal-content {
-        margin: 10% auto;
-        width: 95%;
-    }
-    
-    .cropper-container {
-        max-height: 50vh;
-    }
-}
