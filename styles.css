@@ -17,15 +17,6 @@
     transform-origin: center;
 }
 
-
-/* Ensure card preview handles overflow */
-.card-preview {
-    overflow: visible;
-    padding: 5rem;
-    margin-right: 1.5cm; /* Accommodate barcode overflow */
-}
-
-
 @font-face {
     font-family: 'ArialBlackCustom';
     src: url('/arta-generator-by-dan/assets/fonts/ARIBLK.TTF') format('truetype');
@@ -565,4 +556,42 @@ body {
     background-color: #e2e8f0;
 }
 
+/* Add padding to the bottom of the body for mobile devices */
+@media (max-width: 768px) {
+    body {
+        padding: 1rem;
+        padding-bottom: 2rem; /* Extra padding at the bottom */
+    }
 
+    .container {
+        grid-template-columns: 1fr;
+        margin-bottom: 2rem; /* Space between container and footer */
+    }
+
+    .button-group {
+        grid-template-columns: 1fr;
+        margin-bottom: 2rem; /* Space after buttons */
+    }
+    
+    /* Ensure form container has adequate spacing */
+    .form-container {
+        margin-bottom: 3rem;
+    }
+    
+    /* Make sure download button has proper spacing */
+    .download-btn-container {
+        margin-bottom: 2rem;
+    }
+}
+
+/* Adjust the modal for better mobile viewing */
+@media (max-width: 400px) {
+    .modal-content {
+        margin: 10% auto;
+        width: 95%;
+    }
+    
+    .cropper-container {
+        max-height: 50vh;
+    }
+}
