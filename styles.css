@@ -47,7 +47,6 @@
     padding: 10px 0;
     background-color: transparent !important;
     width: 100%;
-    position: relative; /* Changed from fixed to relative */
     margin-top: 30px; /* Add space above footer */
 }
 
@@ -294,13 +293,9 @@ body {
 /* Container Layout */
 /* CSS Variables for easier customization */
 :root {
-    --container-max-width: 1200px;
-    --mobile-padding: 1rem;
-    --extra-padding-bottom: 2rem;
-    --margin-bottom-spacing: 2rem;
-    --small-margin-bottom: 3rem;
-    --form-width: 90%;
-    --max-width-modal: 95%;
+    --container-max-width: 100%;
+    --form-width: 100%;
+    --max-width-modal: 100%;
 }
 
 .container {
@@ -638,5 +633,3 @@ h1, h2, h3, .text {
 .secondary-button:hover {
     background-color: #e2e8f0;
 }
-
-
