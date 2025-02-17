@@ -312,6 +312,7 @@ body {
     height: 12.5cm;
     max-width: 100%;
     margin: 0 auto;
+    margin-bottom: .5cm;
     display: flex;
     background: url('https://raw.githubusercontent.com/dancbsabao/arta-generator-by-dan/main/assets/images/ARTA%20TEMPLATE.jpg') no-repeat center center;
     background-size: cover;
