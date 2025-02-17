@@ -304,14 +304,13 @@ body {
 
 /* Container Layout */
 .container {
-    max-width: 90%;
+    max-width: 100%;
     margin: 0 auto;
     gap: 2rem;
     align-items: start;
 }
 
 .card-preview {
-    display: flex;
     justify-content: center;
     align-items: center;
     width: 100%;
