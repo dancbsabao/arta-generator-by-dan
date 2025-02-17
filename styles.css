@@ -44,6 +44,7 @@
     text-align: center;
     font-size: 14px;
     color: #666;
+    padding: 10px 0;
     background-color: transparent !important;
     width: 100%;
     margin-top: 30px; /* Add space above footer */
@@ -292,9 +293,13 @@ body {
 /* Container Layout */
 /* CSS Variables for easier customization */
 :root {
-    --container-max-width: 90%;
+    --container-max-width: 1200px;
+    --mobile-padding: 1rem;
+    --extra-padding-bottom: 2rem;
+    --margin-bottom-spacing: 2rem;
+    --small-margin-bottom: 3rem;
     --form-width: 90%;
-    --max-width-modal: 90%;
+    --max-width-modal: 95%;
 }
 
 .container {
@@ -306,60 +311,6 @@ body {
     padding: var(--mobile-padding); /* Base padding */
 }
 
-/* Responsive - Adjust for mobile screens (max-width: 768px) */
-@media (max-width: 768px) {
-    body {
-        padding: var(--mobile-padding);
-        padding-bottom: var(--extra-padding-bottom); /* Extra padding at the bottom */
-    }
-
-    .container {
-        grid-template-columns: 1fr;
-        margin-bottom: var(--margin-bottom-spacing); /* Space between container and footer */
-    }
-
-    .button-group {
-        display: flex;
-        flex-direction: column;
-        gap: var(--margin-bottom-spacing); /* Adds space between buttons */
-    }
-
-    /* Form and button spacing */
-    .form-container {
-        margin-bottom: var(--small-margin-bottom);
-    }
-
-    .download-btn-container {
-        margin-bottom: var(--margin-bottom-spacing);
-    }
-
-    /* Ensure form container and other components have adequate spacing */
-    .form-container,
-    .dropdown-container {
-        max-width: var(--form-width); /* Ensures forms don't exceed 90% width */
-    }
-}
-
-/* Mobile adjustments for smaller screens (max-width: 400px) */
-@media (max-width: 400px) {
-    .custom-download-btn {
-        width: 100%;
-    }
-
-    .modal-content {
-        margin: 10% auto;
-        width: var(--max-width-modal);
-    }
-
-    .cropper-container {
-        max-height: 50vh;
-    }
-}
-
-/* Use clamp() for fluid typography */
-h1, h2, h3, .text {
-    font-size: clamp(1.2rem, 5vw, 2rem); /* Scales text size based on viewport */
-}
 
 /* Container Layout */
 
