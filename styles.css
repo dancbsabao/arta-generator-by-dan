@@ -44,7 +44,6 @@
     text-align: center;
     font-size: 14px;
     color: #666;
-    padding: 10px 0;
     background-color: transparent !important;
     width: 100%;
     margin-top: 30px; /* Add space above footer */
@@ -293,9 +292,9 @@ body {
 /* Container Layout */
 /* CSS Variables for easier customization */
 :root {
-    --container-max-width: 100%;
-    --form-width: 100%;
-    --max-width-modal: 100%;
+    --container-max-width: 90%;
+    --form-width: 90%;
+    --max-width-modal: 90%;
 }
 
 .container {
@@ -633,3 +632,5 @@ h1, h2, h3, .text {
 .secondary-button:hover {
     background-color: #e2e8f0;
 }
+
+
