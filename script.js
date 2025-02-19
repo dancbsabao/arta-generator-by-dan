@@ -542,9 +542,9 @@ document.addEventListener("DOMContentLoaded", function () {
         let nameText = firstNameInput.value.trim().toUpperCase();
         let words = nameText.split(/\s+/);
         
-        // Check if first word is longer than 10 characters
-        if (words[0] && words[0].length >= 10) {
-            firstNameElement.style.fontSize = "23pt"; // Reduced font size
+        // Check if first word is longer than 11 characters
+        if (words[0] && words[0].length >= 11) {
+            firstNameElement.style.fontSize = "20pt"; // Reduced font size
         } else {
             firstNameElement.style.fontSize = "26pt"; // Original font size
         }
