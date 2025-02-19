@@ -537,44 +537,40 @@ async function initializeForm() {
 document.addEventListener("DOMContentLoaded", function () {
     const firstNameInput = document.getElementById("first-name-input");
     const firstNameElement = document.getElementById("first-name-text");
-
+    
     function formatFirstName() {
-        let nameText = firstNameInput.value.trim().toUpperCase(); // Get user input
-        let words = nameText.split(/\s+/); // Split words by spaces
-
-        if (words.length === 2) {
-            firstNameElement.innerHTML = words.join("<br>"); // 2 words → 2 lines
-        } else if (words.length === 3) {
-            firstNameElement.innerHTML = words.join("<br>"); // 3 words → 3 lines
-        } else if (words.length === 4) {
-            firstNameElement.innerHTML = words.slice(0, 2).join(" ") + "<br>" + words.slice(2).join(" "); // 4 words → 2 lines (2 words each)
+        let nameText = firstNameInput.value.trim().toUpperCase();
+        let words = nameText.split(/\s+/);
+        
+        // Check if first word is longer than 10 characters
+        if (words[0] && words[0].length >= 10) {
+            firstNameElement.style.fontSize = "24pt"; // Reduced font size
         } else {
-            firstNameElement.textContent = nameText; // Default single-line name
+            firstNameElement.style.fontSize = "26pt"; // Original font size
+        }
+        
+        // Original word formatting logic
+        if (words.length === 2) {
+            firstNameElement.innerHTML = words.join("<br>");
+        } else if (words.length === 3) {
+            firstNameElement.innerHTML = words.join("<br>");
+        } else if (words.length === 4) {
+            firstNameElement.innerHTML = words.slice(0, 2).join(" ") + "<br>" + words.slice(2).join(" ");
+        } else {
+            firstNameElement.innerHTML = nameText;
         }
     }
-
-    // Run function when the user types in the input field
+    
     firstNameInput.addEventListener("input", formatFirstName);
     
-    // Load secure configuration first
+    // Initial load
     loadConfig();
-});
-
-/**
- * Auto-resize text within its container without breaking words.
- * @param {HTMLElement} element - The element whose text needs to be resized.
- */
-function autoResizeText(element) {
-    let fontSize = 24; // Starting font size in pt
-    const maxWidth = element.parentElement.clientWidth; // Get parent container width
-
-    element.style.fontSize = fontSize + "pt"; // Set initial size
-
-    while (element.scrollWidth > maxWidth && fontSize > 10) { 
-        fontSize -= 1;
-        element.style.fontSize = fontSize + "pt";
+    
+    // Initial format if there's text
+    if (firstNameInput.value) {
+        formatFirstName();
     }
-}
+});
 
 
 // Photo folder button click handler (preserved from original)
