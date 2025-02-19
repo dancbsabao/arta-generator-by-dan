@@ -560,6 +560,22 @@ document.addEventListener("DOMContentLoaded", function () {
     loadConfig();
 });
 
+/**
+ * Auto-resize text within its container without breaking words.
+ * @param {HTMLElement} element - The element whose text needs to be resized.
+ */
+function autoResizeText(element) {
+    let fontSize = 24; // Starting font size in pt
+    const maxWidth = element.parentElement.clientWidth; // Get parent container width
+
+    element.style.fontSize = fontSize + "pt"; // Set initial size
+
+    while (element.scrollWidth > maxWidth && fontSize > 10) { 
+        fontSize -= 1;
+        element.style.fontSize = fontSize + "pt";
+    }
+}
+
 
 // Photo folder button click handler (preserved from original)
 photoFolderBtn.addEventListener('click', () => {
