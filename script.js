@@ -358,7 +358,7 @@ function showInstructionModal() {
             <ul style="padding-left: 20px; line-height: 1.6; color: #555; font-size: 14px;">
                 <li>Print your ARTA ID using A5 size paper.</li>
                 <li>Visit the Personnel Section - Administrative Division to claim your reusable and washable ID Case.</li>
-                <li>ID laces are available only for newly hired employees. Replacements for lost or damaged laces require an affidavit of loss.</li>
+                <li>ID laces are available only for newly hired employees. Replacements for lost laces require an affidavit of loss.</li>
             </ul>
             <button id="close-modal" style="display: block; width: 100px; margin: 20px auto 0; padding: 8px 12px; background-color: #007BFF; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 14px;">Close</button>
         </div>
