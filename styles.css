@@ -430,9 +430,12 @@ body {
     font-family: 'TahomaCustom', sans-serif;
     font-weight: bold;
     color: white;
-    line-height: 1;
+    line-height: .9; /* Increase slightly for readability */
     text-align: center;
     width: 85%;
+    white-space: normal; /* Ensure text wraps correctly */
+    display: block; /* Make sure text behaves as expected */
+    word-wrap: break-word; /* Ensure long words wrap */
 }
 
 .assignment {
