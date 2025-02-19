@@ -544,7 +544,7 @@ document.addEventListener("DOMContentLoaded", function () {
         
         // Check if first word is longer than 10 characters
         if (words[0] && words[0].length >= 10) {
-            firstNameElement.style.fontSize = "24pt"; // Reduced font size
+            firstNameElement.style.fontSize = "23pt"; // Reduced font size
         } else {
             firstNameElement.style.fontSize = "26pt"; // Original font size
         }
