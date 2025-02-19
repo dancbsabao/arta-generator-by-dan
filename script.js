@@ -336,6 +336,43 @@ tinInput.addEventListener('input', async (e) => {
     }
 });
 
+// Function to show the instruction modal
+function showInstructionModal() {
+    const modal = document.createElement('div');
+    modal.id = 'instruction-modal';
+    modal.style.position = 'fixed';
+    modal.style.top = '0';
+    modal.style.left = '0';
+    modal.style.width = '100%';
+    modal.style.height = '100%';
+    modal.style.backgroundColor = 'rgba(0, 0, 0, 0.5)';
+    modal.style.display = 'flex';
+    modal.style.justifyContent = 'center';
+    modal.style.alignItems = 'center';
+    modal.style.zIndex = '1000';
+
+    modal.innerHTML = `
+        <div style="background: white; padding: 25px; border-radius: 8px; width: 450px; box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); font-family: Arial, sans-serif;">
+            <h2 style="text-align: center; color: #333; margin-bottom: 15px;">ARTA ID SUCCESSFULLY CREATED</h2>
+            <p style="font-weight: bold; margin-bottom: 10px;">Instructions:</p>
+            <ul style="padding-left: 20px; line-height: 1.6; color: #555; font-size: 14px;">
+                <li>Print your ARTA ID using A5 size paper.</li>
+                <li>Visit the Personnel Section - Administrative Division to claim your reusable and washable ID Case.</li>
+                <li>ID laces are available only for newly hired employees. Replacements for lost or damaged laces require an affidavit of loss.</li>
+            </ul>
+            <button id="close-modal" style="display: block; width: 100px; margin: 20px auto 0; padding: 8px 12px; background-color: #007BFF; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 14px;">Close</button>
+        </div>
+    `;
+
+    document.body.appendChild(modal);
+
+    document.getElementById('close-modal').addEventListener('click', () => {
+        document.body.removeChild(modal);
+    });
+}
+
+
+
 // Download ID Card as A5 PDF
 downloadBtn.addEventListener('click', async () => {
     try {
@@ -400,7 +437,8 @@ downloadBtn.addEventListener('click', async () => {
         pdf.addImage(imgData, 'JPEG', margin, 10, imgWidth, imgHeight);
         pdf.addImage(imgData, 'JPEG', margin + imgWidth + 10, 10, imgWidth, imgHeight);
         pdf.save(`${selectedEmployee.firstName}-${selectedEmployee.lastName}-ID.pdf`);
-    
+        // Show the instruction modal after download
+        showInstructionModal();
     } catch (error) {
         console.error('Error generating ID card:', error);
         alert('Error generating ID card. Please check console.');
