@@ -537,19 +537,27 @@ async function initializeForm() {
 document.addEventListener("DOMContentLoaded", function () {
     const firstNameInput = document.getElementById("first-name-input");
     const firstNameElement = document.getElementById("first-name-text");
-    
+
     function formatFirstName() {
         let nameText = firstNameInput.value.trim().toUpperCase();
         let words = nameText.split(/\s+/);
-        
-        // Check if first word is longer than 11 characters
-        if (words[0] && words[0].length >= 11) {
-            firstNameElement.style.fontSize = "20pt"; // Reduced font size
+
+        // Check if the first name is a single word with 8 or fewer characters
+        if (words.length === 1 && words[0].length <= 8) {
+            firstNameElement.style.fontSize = "45px"; // Set font size to 30px
+        } else if (words[0] && words[0].length >= 10) {
+            firstNameElement.style.fontSize = "24pt"; // Reduced font size for long words
         } else {
-            firstNameElement.style.fontSize = "26pt"; // Original font size
+            firstNameElement.style.fontSize = "26pt"; // Default font size
         }
-        
-        // Original word formatting logic
+
+        // Check if last word is a suffix (Roman numeral or "SR."/"JR")
+        const suffixes = ["I", "II", "III", "IV", "SR.", "JR."];
+        if (words.length > 1 && suffixes.includes(words[words.length - 1])) {
+            words[words.length - 2] += " " + words.pop(); // Merge last word with previous one
+        }
+
+        // Formatting logic
         if (words.length === 2) {
             firstNameElement.innerHTML = words.join("<br>");
         } else if (words.length === 3) {
@@ -560,12 +568,12 @@ document.addEventListener("DOMContentLoaded", function () {
             firstNameElement.innerHTML = nameText;
         }
     }
-    
+
     firstNameInput.addEventListener("input", formatFirstName);
-    
+
     // Initial load
     loadConfig();
-    
+
     // Initial format if there's text
     if (firstNameInput.value) {
         formatFirstName();
