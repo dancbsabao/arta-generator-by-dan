@@ -585,27 +585,31 @@ document.addEventListener("DOMContentLoaded", function () {
     const positionInput = document.getElementById("position-input");
     const positionElement = document.getElementById("position-text");
 
-    function mergeRomanNumeralSuffix(inputElement, outputElement) {
+    function formatPositionText(inputElement, outputElement) {
         let text = inputElement.value.trim().toUpperCase();
         let words = text.split(/\s+/);
 
-        // Check if last word is a Roman numeral
+        // Check if the last word is a Roman numeral
         const romanNumerals = ["I", "II", "III", "IV", "V", "VI"];
         if (words.length > 1 && romanNumerals.includes(words[words.length - 1])) {
             words[words.length - 2] += " " + words.pop(); // Merge last word with previous one
         }
 
-        // Update the output element
-        outputElement.innerHTML = words.join(" ");
+        // Formatting logic: First two words on first line, rest on the second line
+        if (words.length > 2) {
+            outputElement.innerHTML = words.slice(0, 2).join(" ") + "<br>" + words.slice(2).join(" ");
+        } else {
+            outputElement.innerHTML = words.join(" ");
+        }
     }
 
     positionInput.addEventListener("input", function () {
-        mergeRomanNumeralSuffix(positionInput, positionElement);
+        formatPositionText(positionInput, positionElement);
     });
 
     // Initial format if there's text
     if (positionInput.value) {
-        mergeRomanNumeralSuffix(positionInput, positionElement);
+        formatPositionText(positionInput, positionElement);
     }
 });
 
