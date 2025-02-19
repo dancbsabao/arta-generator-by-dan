@@ -581,6 +581,35 @@ document.addEventListener("DOMContentLoaded", function () {
 });
 
 
+document.addEventListener("DOMContentLoaded", function () {
+    const positionInput = document.getElementById("position-input");
+    const positionElement = document.getElementById("position-text");
+
+    function mergeRomanNumeralSuffix(inputElement, outputElement) {
+        let text = inputElement.value.trim().toUpperCase();
+        let words = text.split(/\s+/);
+
+        // Check if last word is a Roman numeral
+        const romanNumerals = ["I", "II", "III", "IV", "V", "VI"];
+        if (words.length > 1 && romanNumerals.includes(words[words.length - 1])) {
+            words[words.length - 2] += " " + words.pop(); // Merge last word with previous one
+        }
+
+        // Update the output element
+        outputElement.innerHTML = words.join(" ");
+    }
+
+    positionInput.addEventListener("input", function () {
+        mergeRomanNumeralSuffix(positionInput, positionElement);
+    });
+
+    // Initial format if there's text
+    if (positionInput.value) {
+        mergeRomanNumeralSuffix(positionInput, positionElement);
+    }
+});
+
+
 // Photo folder button click handler (preserved from original)
 photoFolderBtn.addEventListener('click', () => {
     window.open('https://drive.google.com/drive/folders/1DJzqBJKDaARcOU9hvPtKMXwpEmBWb-La?usp=sharing', '_blank');
