@@ -238,7 +238,7 @@ assignmentInput.addEventListener('input', (e) => {
 
 // Helper function to update last name display
 function updateLastNameDisplay() {
-    const middleInitial = formState.middleInitial ? formState.middleInitial : 'M.';
+    const middleInitial = formState.middleInitial ? formState.middleInitial : ' ';
     const lastName = formState.lastName || 'LASTNAME';
     
     // Combine middle initial and last name
