@@ -25,37 +25,55 @@ app.use(cors({
 
 app.use(express.json());
 
-// ✅ **New Keep-Alive Endpoint**
+// ✅ **Keep-Alive Endpoint**
 app.get('/ping', (req, res) => {
   console.log('Server pinged: ' + new Date().toISOString());
   res.status(200).send('OK');
 });
 
-// ✅ **New API to Serve Configurations Securely**
+// ✅ **API to Serve Configurations Securely**
 app.get('/config', (req, res) => {
-    res.json({
-        apiKey: process.env.GOOGLE_API_KEY,
-        spreadsheetId: process.env.SPREADSHEET_ID,
-        range: 'Sheet1!A:F'
-    });
+  res.json({
+    apiKey: process.env.GOOGLE_API_KEY,
+    spreadsheetId: process.env.SPREADSHEET_ID,
+    range: 'Sheet1!A:F'
+  });
 });
 
 // ✅ **Secure API Endpoint to Fetch Google Sheets Data**
 app.get('/api/data', async (req, res) => {
-    try {
-        const apiKey = process.env.GOOGLE_API_KEY;
-        const spreadsheetId = process.env.SPREADSHEET_ID;
-        const range = 'Sheet1!A:F';
+  try {
+    const apiKey = process.env.GOOGLE_API_KEY;
+    const spreadsheetId = process.env.SPREADSHEET_ID;
+    const range = 'Sheet1!A:F';
 
-        const url = `https://sheets.googleapis.com/v4/spreadsheets/${spreadsheetId}/values/${range}?key=${apiKey}`;
+    const url = `https://sheets.googleapis.com/v4/spreadsheets/${spreadsheetId}/values/${range}?key=${apiKey}`;
 
-        const response = await axios.get(url);
-        res.json(response.data);
-    } catch (error) {
-        console.error('Error fetching data:', error);
-        res.status(500).json({ error: 'Error fetching data' });
-    }
+    const response = await axios.get(url);
+    res.json(response.data);
+  } catch (error) {
+    console.error('Error fetching data:', error);
+    res.status(500).json({ error: 'Error fetching data' });
+  }
 });
+
+// ✅ **Keep-Alive Function**
+function keepServerAlive() {
+  const pingInterval = 14 * 60 * 1000; // 14 minutes in milliseconds
+  const url = `http://localhost:${PORT}/ping`; // Local ping during runtime
+  setInterval(async () => {
+    try {
+      const response = await axios.get(url);
+      if (response.status === 200) {
+        console.log('Keep-alive ping successful: ' + new Date().toISOString());
+      } else {
+        console.warn('Keep-alive ping failed with status: ' + response.status);
+      }
+    } catch (error) {
+      console.warn('Error during keep-alive ping:', error.message);
+    }
+  }, pingInterval);
+}
 
 // Handle 404 errors for undefined routes
 app.use((req, res, next) => {
@@ -66,4 +84,5 @@ app.use((req, res, next) => {
 const PORT = process.env.PORT || 10000;
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
+  keepServerAlive(); // Start the keep-alive mechanism after server starts
 });
