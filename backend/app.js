@@ -14,7 +14,6 @@ const allowedOrigins = [
 
 app.use(cors({
   origin: function (origin, callback) {
-    // Allow requests with no origin (like mobile apps or curl requests)
     if (!origin || allowedOrigins.includes(origin)) {
       callback(null, true);
     } else {
@@ -25,13 +24,13 @@ app.use(cors({
 
 app.use(express.json());
 
-// ✅ **Keep-Alive Endpoint**
+// Keep-Alive Endpoint
 app.get('/ping', (req, res) => {
   console.log('Server pinged: ' + new Date().toISOString());
   res.status(200).send('OK');
 });
 
-// ✅ **API to Serve Configurations Securely**
+// API to Serve Configurations Securely
 app.get('/config', (req, res) => {
   res.json({
     apiKey: process.env.GOOGLE_API_KEY,
@@ -40,7 +39,7 @@ app.get('/config', (req, res) => {
   });
 });
 
-// ✅ **Secure API Endpoint to Fetch Google Sheets Data**
+// Secure API Endpoint to Fetch Google Sheets Data
 app.get('/api/data', async (req, res) => {
   try {
     const apiKey = process.env.GOOGLE_API_KEY;
@@ -57,10 +56,10 @@ app.get('/api/data', async (req, res) => {
   }
 });
 
-// ✅ **Keep-Alive Function**
+// Keep-Alive Function
 function keepServerAlive() {
-  const pingInterval = 14 * 60 * 1000; // 14 minutes in milliseconds
-  const url = `http://localhost:${PORT}/ping`; // Local ping during runtime
+  const pingInterval = 5 * 60 * 1000; // 5 minutes
+  const url = 'https://arta-generator-by-dan.onrender.com/ping'; // Hardcoded deployed URL
   setInterval(async () => {
     try {
       const response = await axios.get(url);
